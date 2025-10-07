@@ -1,0 +1,44 @@
+---
+glob: "app/views/**/*.erb"
+EnableDefaultLinters: true
+exclude:
+  - app/views/shared/_navigation_sidebar_panel.html.erb # better_html struggling to parse AlpineJS syntax
+  - app/views/shared/_navigation_sidebar.html.erb # better_html struggling to parse AlpineJS syntax
+linters:
+  AllowedScriptType:
+    enabled: true
+    allowed_types:
+      - 'application/ld+json'
+      - 'text/javascript'
+      - '<%= ot_script_type %>'
+    allow_blank: true
+    disallow_inline_scripts: false
+  ErbSafety:
+    enabled: true
+    better_html_config: .better-html.yml
+    exclude:
+      - app/views/shared/_analytics.html.erb # erb_lint struggling with a js-erb mix
+  Rubocop:
+    enabled: true
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+      Layout/InitialIndentation:
+        Enabled: false
+      Layout/LineLength:
+        Enabled: false
+      Layout/TrailingEmptyLines:
+        Enabled: false
+      Layout/TrailingWhitespace:
+        Enabled: false
+      Lint/UselessAssignment:
+        Enabled: false
+      Naming/FileName:
+        Enabled: false
+      Rails/OutputSafety:
+        Enabled: false
+      Style/FrozenStringLiteralComment:
+        Enabled: false
+  SelfClosingTag:
+    enabled: true
+    enforced_style: 'never'

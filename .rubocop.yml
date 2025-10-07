@@ -1,0 +1,130 @@
+plugins:
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+require:
+  - ./lib/rubocop/cop/migration/dangerous_method.rb
+  - ./lib/rubocop/cop/hnry/tax_id_number_attribute_access.rb
+  - ./lib/rubocop/cop/hnry/rollbar_abuse.rb
+  - ./lib/rubocop/cop/hnry/confused_use_case.rb
+
+inherit_from: .rubocop_todo.yml
+
+# inherit_gem:
+#   rswag-specs: .rubocop_rspec_alias_config.yml
+
+AllCops:
+  Exclude:
+    - "bin/*"
+    - "node_modules/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - "spec/fixtures/files/ird/period_balance_fetcher/*"
+    - "public/letter_avatars/**/*"
+    - "vendor/hnry-gems/hnry_card_gateway" # HCGW has it's own rubocop for now
+    - "db/migrate/201*"
+    - "db/migrate/202[0-4]*"
+  NewCops: enable
+  SuggestExtensions:
+    rubocop-graphql: false # Skip for now, maybe one day??
+    rubocop-rspec_rails: false
+
+# Alphabetical below here
+
+Hnry/ConfusedUseCase:
+  Include:
+    - "app/services/**/*"
+
+Hnry/TaxIdNumberAttributeAccess:
+  Exclude:
+    - "spec/**/*"
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - "lib/tasks/**/*.rake"
+
+Metrics/BlockLength:
+  Exclude:
+    - config/routes.rb
+    - config/routes/*.rb
+    - lib/tasks/**/*.rake
+
+Migration/DangerousMethod:
+  Include:
+    - "db/migrate/*"
+
+Naming/MethodParameterName:
+  AllowedNames: as, at, by, cc, db, fy, id, if, in, io, ip, of, on, os, pp, to
+
+Naming/PredicateMethod:
+  AllowedMethods:
+    - call
+    - initialize
+    - new
+    - perform
+
+Rails/ActionControllerFlashBeforeRender:
+  Enabled: false # Review this decision one day, it seems to be giving false positives...
+
+# Disable as new standard behaviour does not reflect Hnry consensus.
+Rails/ToFormattedS:
+  Enabled: false
+
+Rails/ToSWithArgument:
+  Enabled: false
+
+Rails/Date:
+  Enabled: true
+
+Rails/DynamicFindBy:
+  AllowedMethods:
+    - find_by_global_id
+  # This catches Capybara's find_by_id
+  Exclude:
+    - spec/features/**/*.rb
+
+Rails/EnvLocal:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - "lib/tasks/*"
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - test
+    - staging
+    - production
+    - uat
+
+Rails/WhereRange:
+  Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - spec/factories/**/*.rb
+
+RSpec/IndexedLet:
+  AllowedPatterns:
+    - "_20[0-9][0-9]$"
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# Part of the Ruby 3.1 upgrade; keeps things consistent with our current style. May remove at a later date and switch
+# to 'always': https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Style/HashSyntax
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Style/MapIntoArray:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
